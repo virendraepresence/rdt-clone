@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import './index.css';
+import Create from './components/Create'
+import NotFound from './components/NotFound'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import BlogDetails from './components/BlogDetails';
+import { useState } from 'react';
+import Footer from './components/Footer';
+
 
 function App() {
+  const [mode, setMode] = useState('light'); 
+  
+  const toggleMode = ()=>{
+    if(mode=== 'light'){
+      setMode('dark')
+      document.body.style.backgroundColor = "#212529"
+    }else{
+      setMode('light')
+      document.body.style.backgroundColor = "white"
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className={`App bg-${mode}`}>
+        <Navbar mode={mode} toggleMode={toggleMode}/>
+        <div className="content">
+          <Switch>
+          <Route exact path="/">
+            <Home mode={mode} toggleMode={toggleMode} />
+          </Route>
+          <Route exact path="/create">
+            <Create mode={mode} toggleMode={toggleMode}/>
+          </Route>
+          <Route exact path="/blogs/:id">
+            <BlogDetails mode={mode}/>
+          </Route>
+
+          <Route path="*">
+            <NotFound mode={mode}/>
+          </Route>
+
+          </Switch>
+          <Footer mode={mode} toggleMode={toggleMode}/>
+          
+        </div>
+      </div>
+    </Router>
   );
 }
 
